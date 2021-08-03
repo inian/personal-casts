@@ -14,7 +14,6 @@ def get_secrets(secret_id, region):
     response = client.get_secret_value(
         SecretId=secret_id,
     )
-    print(response)
     return json.loads(response['SecretString'])
 
 

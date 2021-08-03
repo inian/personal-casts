@@ -14,7 +14,7 @@ provider:
     - Effect: "Allow"
       Action:
         - "secretsmanager:GetSecretValue"
-      Resource: "arn:aws:secretsmanager:ap-southeast-1:130238634661:secret:serverless/personal-casts-LXQrI4"
+      Resource: "arn:aws:secretsmanager:ap-southeast-1:${aws:accountId}:secret:serverless/personal-casts-LXQrI4"
     - Effect: "Allow"
       Action:
         - "lambda:InvokeFunction"
