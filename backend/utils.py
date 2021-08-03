@@ -27,8 +27,8 @@ def download_video(video_url, file_name):
     print("downloading ", video_url, file_name)
     ydl_opts = {
         'outtmpl': file_name,
-        'forcefilename': True,
-        'forcejson': True
+        'format': 'mp4',
+        'cachedir': False
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         response = ydl.download([video_url])
