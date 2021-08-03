@@ -1,0 +1,50 @@
+service: personal-casts
+
+frameworkVersion: "2"
+configValidationMode: error
+
+provider:
+  name: aws
+  stage: dev
+  profile: personal
+  region: ap-southeast-1
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "secretsmanager:GetSecretValue"
+      Resource: "arn:aws:secretsmanager:ap-southeast-1:130238634661:secret:serverless/personal-casts-LXQrI4"
+    - Effect: "Allow"
+      Action:
+        - "lambda:InvokeFunction"
+      Resource: "arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-convert"
+  environment:
+    region: ap-southeast-1
+    secret_name: serverless/personal-casts
+    supabase_url: https://nyivskfbrgdohftvxksy.supabase.co
+
+plugins:
+  - serverless-python-requirements
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+
+  convert:
+    handler: convert.main
+    timeout: 300
+
+  queue-convert:
+    handler: queue-convert.main
+    timeout: 30
+    environment:
+      lambda_name: personal-casts-${self:provider.stage}-convert
+    events:
+      - http:
+          path: convert
+          method: post
