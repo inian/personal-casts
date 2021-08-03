@@ -51,7 +51,9 @@ def queue_download(video_url, lambda_name, region):
 
 def upload_to_storage(file_path, storage_endpoint, service_key):
     print("uploding to storage ", file_path)
-    response = requests.post(storage_endpoint + '/object/podcast-media/video.mp4', files={
+    file_name = file_path.split("/")[-1] + '.mp4'
+    url = f"{storage_endpoint}/object/podcast-media/{file_name}"
+    response = requests.post(url, files={
         '': ('', open(file_path, 'rb'), 'video/mp4')
     }, headers={
         'Authorization': 'Bearer ' + service_key,
@@ -59,4 +61,4 @@ def upload_to_storage(file_path, storage_endpoint, service_key):
     })
     print(response)
     print(response.text)
-    return True
+    return file_name
