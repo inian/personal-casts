@@ -2,7 +2,6 @@ import json
 import os
 
 from utils import get_secrets
-from utils import authenticate_request
 from utils import download_video
 from utils import upload_to_storage
 
