@@ -13,6 +13,7 @@ from utils import upload_to_storage
 def main(event, context):
     secret_id = os.environ['secret_name']
     region = os.environ['region']
+    media_bucket = os.environ['podcast_media_bucket']
     storage_endpoint = os.environ['supabase_url'] + '/storage/v1'
     secrets = get_secrets(secret_id, region)
 
@@ -26,7 +27,8 @@ def main(event, context):
         # using the request id as the file name for now
         file_name = '/tmp/' + context.aws_request_id
         download_video(video_url, file_name)
-        upload_to_storage(file_name, storage_endpoint, service_key)
+        upload_to_storage(file_name, storage_endpoint,
+                          media_bucket, service_key)
     except Exception as e:
         print(e)
 

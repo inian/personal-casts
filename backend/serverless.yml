@@ -23,6 +23,7 @@ provider:
     region: ap-southeast-1
     secret_name: serverless/personal-casts
     supabase_url: https://nyivskfbrgdohftvxksy.supabase.co
+    podcast_media_bucket: podcast-media
 
 plugins:
   - serverless-python-requirements

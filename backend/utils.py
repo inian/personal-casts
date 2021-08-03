@@ -49,10 +49,10 @@ def queue_download(video_url, lambda_name, region):
     return response
 
 
-def upload_to_storage(file_path, storage_endpoint, service_key):
+def upload_to_storage(file_path, storage_endpoint, media_bucket, service_key):
     print("uploding to storage ", file_path)
     file_name = file_path.split("/")[-1] + '.mp4'
-    url = f"{storage_endpoint}/object/podcast-media/{file_name}"
+    url = f"{storage_endpoint}/object/{media_bucket}/{file_name}"
     response = requests.post(url, files={
         '': ('', open(file_path, 'rb'), 'video/mp4')
     }, headers={
