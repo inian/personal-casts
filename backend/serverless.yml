@@ -28,6 +28,12 @@ provider:
 plugins:
   - serverless-python-requirements
 
+custom:
+  pythonRequirements:
+    fileName: requirements.txt
+    dockerizePip: true
+    slim: true
+
 functions:
   hello:
     handler: handler.hello

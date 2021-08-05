@@ -2,7 +2,7 @@ import json
 
 import boto3
 from botocore.config import Config
-import youtube_dl
+from pytube import YouTube
 import requests
 
 
@@ -21,17 +21,16 @@ def authenticate_request(auth_header, api_key):
     return auth_header[len("Bearer "):] == api_key
 
 
-def download_video(video_url, file_name):
+def download_video(video_url, folder, file_name):
     # todo: what about extension
     print("downloading ", video_url, file_name)
-    ydl_opts = {
-        'outtmpl': file_name,
-        'format': 'mp4',
-        'cachedir': False
-    }
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        response = ydl.download([video_url])
-        print(response)
+    yt = YouTube(video_url)
+    video = yt.streams.filter(mime_type='video/mp4').first()
+    video.download(output_path=folder, filename=file_name, skip_existing=True)
+    print(yt)
+    print(video)
+    print(video.filesize)
+    return yt.description, yt.thumbnail_url, yt.title, video.filesize
 
 
 def queue_download(video_url, lambda_name, region):
@@ -48,16 +47,21 @@ def queue_download(video_url, lambda_name, region):
     return response
 
 
-def upload_to_storage(file_path, storage_endpoint, media_bucket, service_key):
-    print("uploding to storage ", file_path)
-    file_name = file_path.split("/")[-1] + '.mp4'
-    url = f"{storage_endpoint}/object/{media_bucket}/{file_name}"
+def upload_to_storage(file_path, storage_endpoint, bucket_name, service_key, content_type, file_contents=None):
+    print("uploding to storage ", file_path, file_contents)
+    if file_contents:
+        with open(file_path, "w") as file:
+            file.write(file_contents)
+
+    file_name = file_path.split("/")[-1]
+    url = f"{storage_endpoint}/object/{bucket_name}/{file_name}"
     response = requests.post(url, files={
-        '': ('', open(file_path, 'rb'), 'video/mp4')
+        '': ('', open(file_path, 'rb'), content_type)
     }, headers={
         'Authorization': 'Bearer ' + service_key,
         'x-upsert': 'true'
     })
+
     print(response)
     print(response.text)
-    return file_name
+    return f"{storage_endpoint}/object/public/{bucket_name}/{file_name}"
