@@ -19,6 +19,10 @@ provider:
       Action:
         - "lambda:InvokeFunction"
       Resource: "arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-convert"
+    - Effect: "Allow"
+      Action:
+        - "polly:SynthesizeSpeech"
+      Resource: "*"
   environment:
     region: ap-southeast-1
     secret_name: serverless/personal-casts

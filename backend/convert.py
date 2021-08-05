@@ -5,6 +5,7 @@ from feeditem import FeedItem
 
 from utils import get_secrets
 from utils import download_video
+from utils import download_webpage
 from utils import upload_to_storage
 from utils import id_generator
 from podcast import Podcast
@@ -13,14 +14,20 @@ from podcast import Podcast
 # todo: add an option to download only the audio
 # ytdl seems to have a postprocessor option
 
-def run(user_id, video_url, storage_endpoint, media_bucket, service_key, type):
+def run(user_id, video_url, storage_endpoint, media_bucket, service_key, type, region, extractor_key):
     # using the request id as the file name for now
     file_id = id_generator()
     folder = '/tmp'
-    content_type = 'video/mp4' if type == 'video' else 'audio/mp4'
 
-    description, thumbnail, title, size = download_video(
-        video_url, folder, file_id, content_type)
+    if 'youtube' in video_url:
+        content_type = 'video/mp4' if type == 'video' else 'audio/mp4'
+        description, thumbnail, title, size = download_video(
+            video_url, folder, file_id, content_type)
+    else:
+        # assume its a webpage
+        content_type = 'audio/mp3'
+        description, thumbnail, title, size = download_webpage(
+            region=region, webpage_url=video_url, file_path=f'{folder}/{file_id}', extractor_key=extractor_key)
     link = upload_to_storage(file_path=f"{folder}/{file_id}", storage_endpoint=storage_endpoint,
                              bucket_name=media_bucket, service_key=service_key, content_type=content_type)
     podcast = Podcast(user_id, storage_endpoint, service_key)
@@ -39,13 +46,14 @@ def main(event, context):
     type = event["type"]
     owner = event["owner"]
     service_key = secrets["SERVICE_KEY"]
+    extractor_key = secrets["EXTRACTOR_KEY"]
 
     print(event, context)
 
     # update the podcast feed with the new video
     try:
         run(owner, video_url,
-            storage_endpoint, media_bucket, service_key, type)
+            storage_endpoint, media_bucket, service_key, type, region, extractor_key)
     except Exception as e:
         print(e)
         return {

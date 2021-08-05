@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import string
 
@@ -33,6 +34,28 @@ def download_video(video_url, folder, file_name, content_type):
     print(video)
     print(video.filesize)
     return yt.description, yt.thumbnail_url, yt.title, video.filesize
+
+
+def download_webpage(region, webpage_url, file_path, extractor_key):
+    extractor_response = requests.get(
+        f"https://extractorapi.com/api/v1/extractor/?apikey={extractor_key}&url={webpage_url}").json()
+    # write polly to mp3
+    my_config = Config(
+        region_name=region,
+    )
+    client = boto3.client('polly', config=my_config)
+    response = client.synthesize_speech(VoiceId='Joanna',
+                                        OutputFormat='mp3',
+                                        # polly limit
+                                        Text=extractor_response["text"][:3000],
+                                        Engine='neural')
+
+    file = open(file_path, 'wb')
+    file.write(response['AudioStream'].read())
+    file.close()
+    # description, thumbnail, title, size
+    images = extractor_response["images"]
+    return extractor_response["url"], [img for img in images if "jpg" in img][0], extractor_response["title"], os.path.getsize(file_path)
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):

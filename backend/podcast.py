@@ -41,7 +41,6 @@ class Podcast(object):
         feed = Feed(title=d.feed.title, link=d.feed.link,
                     description=d.feed.subtitle)
         for entry in d.entries:
-            print(entry['links'])
             fi = FeedItem(id=entry['id'], title=entry['title'], link=entry['links'][-1]['href'], mimeType=entry[
                 'links'][-1]['type'], length=entry['links'][-1]['length'], description=entry['summary'])
             feed.add_entry(fi)
