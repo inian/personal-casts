@@ -12,17 +12,19 @@ from podcast import Podcast
 # todo: add an option to download only the audio
 # ytdl seems to have a postprocessor option
 
-def run(user_id, video_url, storage_endpoint, media_bucket, service_key):
+def run(user_id, video_url, storage_endpoint, media_bucket, service_key, type):
     # using the request id as the file name for now
     file_id = "qesd1.mp4"
     folder = '/tmp'
+    content_type = 'video/mp4' if type == 'video' else 'audio/mp4'
+
     description, thumbnail, title, size = download_video(
-        video_url, folder, file_id)
+        video_url, folder, file_id, content_type)
     link = upload_to_storage(file_path=f"{folder}/{file_id}", storage_endpoint=storage_endpoint,
-                             bucket_name=media_bucket, service_key=service_key, content_type='video/mp4')
+                             bucket_name=media_bucket, service_key=service_key, content_type=content_type)
     podcast = Podcast(user_id, storage_endpoint, service_key)
     fi = FeedItem(file_id, title=title, link=link,
-                  mimeType="video/mp4", length=str(size), description=description, thumbnail=thumbnail)
+                  mimeType=content_type, length=str(size), description=description, thumbnail=thumbnail)
     podcast.add_podcast_item(fi)
 
 
@@ -33,6 +35,7 @@ def main(event, context):
     storage_endpoint = os.environ['supabase_url'] + '/storage/v1'
     secrets = get_secrets(secret_id, region)
     video_url = event["video_url"]
+    type = event["type"]
     service_key = secrets["SERVICE_KEY"]
 
     print(event, context)
@@ -40,7 +43,7 @@ def main(event, context):
     # update the podcast feed with the new video
     try:
         run(context.aws_request_id, video_url,
-            storage_endpoint, media_bucket, service_key)
+            storage_endpoint, media_bucket, service_key, type)
     except Exception as e:
         print(e)
         return {

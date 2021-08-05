@@ -21,11 +21,11 @@ def authenticate_request(auth_header, api_key):
     return auth_header[len("Bearer "):] == api_key
 
 
-def download_video(video_url, folder, file_name):
-    # todo: what about extension
-    print("downloading ", video_url, file_name)
+def download_video(video_url, folder, file_name, content_type):
+    print("downloading ", video_url, file_name, type)
     yt = YouTube(video_url)
-    video = yt.streams.filter(mime_type='video/mp4').first()
+    video = yt.streams.filter(mime_type=content_type).first()
+
     video.download(output_path=folder, filename=file_name, skip_existing=True)
     print(yt)
     print(video)
@@ -33,7 +33,7 @@ def download_video(video_url, folder, file_name):
     return yt.description, yt.thumbnail_url, yt.title, video.filesize
 
 
-def queue_download(video_url, lambda_name, region):
+def queue_download(video_url, lambda_name, region, type):
     print("queueing download ", video_url)
     my_config = Config(
         region_name=region,
@@ -42,7 +42,7 @@ def queue_download(video_url, lambda_name, region):
     response = client.invoke(
         FunctionName=lambda_name,
         InvocationType="Event",
-        Payload=json.dumps({"video_url": video_url})
+        Payload=json.dumps({"video_url": video_url, "type": type})
     )
     return response
 

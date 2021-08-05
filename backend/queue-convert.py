@@ -40,7 +40,8 @@ def main(event, context):
     # async invoke the lambda here
     request_body = json.loads(event["body"])["record"]
     video_url = request_body["video_url"]
-    queue_download(video_url, lambda_name, region)
+    type = request_body["type"]
+    queue_download(video_url, lambda_name, region, type)
 
     body = {
         "message": "Go Serverless v2.0! Your function executed successfully!",
