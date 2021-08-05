@@ -54,6 +54,13 @@ def queue_download(video_url, lambda_name, region, type, owner):
     return response
 
 
+def get_file_from_storage(storage_endpoint, bucket_name, file_name):
+    url = f"{storage_endpoint}/object/public/{bucket_name}/{file_name}"
+    print(url)
+    response = requests.get(url)
+    return response.status_code, response.text
+
+
 def upload_to_storage(file_path, storage_endpoint, bucket_name, service_key, content_type, file_contents=None):
     print("uploding to storage ", file_path, file_contents)
     if file_contents:

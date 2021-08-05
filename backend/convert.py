@@ -45,7 +45,7 @@ def main(event, context):
     # update the podcast feed with the new video
     try:
         run(owner, video_url,
-            storage_endpoint, media_bucket, service_key, type, owner)
+            storage_endpoint, media_bucket, service_key, type)
     except Exception as e:
         print(e)
         return {
