@@ -1,4 +1,6 @@
 import json
+import random
+import string
 
 import boto3
 from botocore.config import Config
@@ -33,7 +35,11 @@ def download_video(video_url, folder, file_name, content_type):
     return yt.description, yt.thumbnail_url, yt.title, video.filesize
 
 
-def queue_download(video_url, lambda_name, region, type):
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def queue_download(video_url, lambda_name, region, type, owner):
     print("queueing download ", video_url)
     my_config = Config(
         region_name=region,
@@ -42,7 +48,8 @@ def queue_download(video_url, lambda_name, region, type):
     response = client.invoke(
         FunctionName=lambda_name,
         InvocationType="Event",
-        Payload=json.dumps({"video_url": video_url, "type": type})
+        Payload=json.dumps(
+            {"video_url": video_url, "type": type, "owner": owner})
     )
     return response
 

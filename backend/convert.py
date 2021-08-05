@@ -6,6 +6,7 @@ from feeditem import FeedItem
 from utils import get_secrets
 from utils import download_video
 from utils import upload_to_storage
+from utils import id_generator
 from podcast import Podcast
 
 
@@ -14,7 +15,7 @@ from podcast import Podcast
 
 def run(user_id, video_url, storage_endpoint, media_bucket, service_key, type):
     # using the request id as the file name for now
-    file_id = "qesd1.mp4"
+    file_id = id_generator()
     folder = '/tmp'
     content_type = 'video/mp4' if type == 'video' else 'audio/mp4'
 
@@ -36,14 +37,15 @@ def main(event, context):
     secrets = get_secrets(secret_id, region)
     video_url = event["video_url"]
     type = event["type"]
+    owner = event["owner"]
     service_key = secrets["SERVICE_KEY"]
 
     print(event, context)
 
     # update the podcast feed with the new video
     try:
-        run(context.aws_request_id, video_url,
-            storage_endpoint, media_bucket, service_key, type)
+        run(owner, video_url,
+            storage_endpoint, media_bucket, service_key, type, owner)
     except Exception as e:
         print(e)
         return {

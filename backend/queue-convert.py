@@ -41,7 +41,8 @@ def main(event, context):
     request_body = json.loads(event["body"])["record"]
     video_url = request_body["video_url"]
     type = request_body["type"]
-    queue_download(video_url, lambda_name, region, type)
+    owner = request_body["owner"]
+    queue_download(video_url, lambda_name, region, type, owner)
 
     body = {
         "message": "Go Serverless v2.0! Your function executed successfully!",
