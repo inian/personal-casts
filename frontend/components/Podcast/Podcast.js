@@ -26,6 +26,7 @@ const Podcast = ({ url }) => {
             description={episode.description}
             url={episode.enclosure.url}
             type={episode.enclosure.type}
+            image={episode.image}
           />
         </div>
       ))}

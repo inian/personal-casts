@@ -1,7 +1,7 @@
 import { Typography } from "@supabase/ui";
 import { Card } from "@supabase/ui";
 
-const PodcastEpisode = ({ title, description, url, type }) => {
+const PodcastEpisode = ({ title, description, url, type, image }) => {
   let cover, episodeDescription;
   if (type == "video/mp4") {
     cover = (
@@ -12,8 +12,13 @@ const PodcastEpisode = ({ title, description, url, type }) => {
     episodeDescription = description;
   } else {
     cover = (
-      <div className="flex justify-center">
-        <audio src={url} controls />
+      <div className="flex justify-around">
+        <div>
+          <img width="100" src={image} />
+        </div>
+        <div>
+          <audio src={url} controls />
+        </div>
       </div>
     );
     episodeDescription = (
