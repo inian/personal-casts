@@ -15,12 +15,11 @@ const Home = ({
   useEffect(() => {}, []);
 
   const onSubmit = () => {
-    const { data, error } = addCastEntry(url, type, user.id);
-    console.log(data, error);
-    if (!error) {
+    try {
+      addCastEntry(url, type, user.id);
       toast.success("Yay entry added");
-    } else {
-      toast.error(`Oops: ${error.message}`);
+    } catch (err) {
+      toast.error(`Oops: ${err.message}`);
     }
   };
 

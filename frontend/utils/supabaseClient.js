@@ -26,11 +26,16 @@ export const getUser = () => {
 
 export const addCastEntry = async (url, type, owner) => {
   console.log("addCastEntry", url, type, owner);
-  return await supabase.from("queue-jobs").insert([
-    {
-      video_url: url,
-      type,
-      owner,
+  await fetch(`/api/queue`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem("supabase.auth.token")).currentSession
+          .access_token
+      }`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-  ]);
+    body: JSON.stringify({ url, type }),
+  });
 };
