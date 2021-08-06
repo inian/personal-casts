@@ -12,7 +12,7 @@ const Home = ({
   const [url, setUrl] = useState("");
   const [type, setType] = useState("video");
 
-  const podcastURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/podcast-xml/${user.id}.xml`;
+  const podcastURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/podcast-xml/${user?.id}.xml`;
 
   useEffect(() => {}, []);
 
