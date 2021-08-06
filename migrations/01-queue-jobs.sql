@@ -17,3 +17,5 @@ COMMENT ON COLUMN "public"."queue-jobs"."owner" IS 'who queued the job';
 COMMENT ON TABLE "public"."queue-jobs" IS 'table to queue podcast jobs';
 
 ALTER TABLE "public"."queue-jobs" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Enable queuing jobs based on user_id" ON "public"."queue-jobs" FOR INSERT WITH CHECK (auth.uid() = owner);
