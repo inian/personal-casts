@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Input, Select, Typography } from "@supabase/ui";
+import {
+  Button,
+  IconMusic,
+  IconRadio,
+  Input,
+  Select,
+  Typography,
+} from "@supabase/ui";
 import { toast } from "react-hot-toast";
 import LogInForm from "../components/LogInForm/LogInForm";
 import { addCastEntry } from "../utils/supabaseClient";
@@ -30,11 +37,11 @@ const Home = ({
 
   return (
     <>
-      <div className="relative">
-        <div className="max-w-screen-xl h-full mx-auto flex-grow flex flex-col">
-          <main className="flex flex-col h-full items-center justify-center w-full flex-1 px-20 text-center text-white">
+      <div className="relative min-h-screen">
+        <div className="h-full flex-grow flex flex-col">
+          <main className="flex flex-col h-full w-full flex-1 text-center text-white">
             {!user ? (
-              <div className="w-[400px] mx-auto">
+              <div className="w-[400px] h-screen flex items-center mx-auto">
                 <LogInForm onLoginSuccess={onLoginSuccess} />
               </div>
             ) : (
@@ -50,34 +57,60 @@ const Home = ({
                     Log out
                   </Button>
                 </div>
-                <div className="w-[400px] space-y-4">
-                  <Input
-                    label="Your customised podcast url"
-                    value={podcastURL}
-                    copy
-                  />
+
+                <div className="w-full bg-gray-700 mx-auto flex flex-col gap-20">
+                  <div className="w-[800px] flex justify-between space-y-8 pt-40 pb-28 mx-auto">
+                    <div className="flex flex-col justify-start w-3/5 space-y-4 text-left">
+                      <Typography.Title level={1}>
+                        Welcome to your{" "}
+                        <span className="text-green-600">customised</span>{" "}
+                        podcast
+                      </Typography.Title>
+                      <div className="space-y-2 text-left">
+                        <Typography.Text>
+                          Your personal podcast URL
+                        </Typography.Text>
+                        <Input value={podcastURL} copy />
+                      </div>
+                    </div>
+                    <div className="w-2/5 flex justify-center relative">
+                      <IconMusic size={120} strokeWidth={2} />
+                      <IconRadio
+                        size={80}
+                        strokeWidth={2}
+                        className="absolute right-14 -top-12 rotate-45 text-gray-300 animate-pulse"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <Podcast url={podcastURL} />
-                <br />
-                <div className="w-[400px] space-y-4">
-                  <Typography.Title level={3} className="text-left">
-                    Add entry to personal casts
-                  </Typography.Title>
-                  <Input
-                    label="Video URL"
-                    value={url}
-                    onChange={(event) => setUrl(event.target.value)}
-                  />
-                  <Select
-                    label="Type"
-                    onChange={(event) => setType(event.target.value)}
-                    value={type}
+
+                <div className="max-w-[1000px] flex w-full mx-auto gap-10">
+                  <div
+                    className="w-1/4 space-y-4 sticky top-0 py-10"
+                    style={{ height: "fit-content" }}
                   >
-                    <Select.Option value="video">video</Select.Option>
-                    <Select.Option value="audio">audio</Select.Option>
-                  </Select>
-                  <div className="w-full flex items-center justify-end">
-                    <Button onClick={onSubmit}>Submit</Button>
+                    <Typography.Title level={4} className="text-left">
+                      Add new entry
+                    </Typography.Title>
+                    <Input
+                      label="Video URL"
+                      value={url}
+                      onChange={(event) => setUrl(event.target.value)}
+                    />
+                    <Select
+                      label="Type"
+                      onChange={(event) => setType(event.target.value)}
+                      value={type}
+                    >
+                      <Select.Option value="video">video</Select.Option>
+                      <Select.Option value="audio">audio</Select.Option>
+                    </Select>
+                    <div className="w-full flex items-center justify-end">
+                      <Button onClick={onSubmit}>Submit</Button>
+                    </div>
+                  </div>
+                  <div className="w-3/4 py-10">
+                    <Podcast url={podcastURL} />
                   </div>
                 </div>
               </>

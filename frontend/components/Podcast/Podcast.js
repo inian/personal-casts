@@ -17,18 +17,17 @@ const Podcast = ({ url }) => {
   if (!podcastXML) return "Loading..";
   console.log(podcastXML);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col space-y-4">
       {podcastXML.episodes.map((episode) => (
-        <div>
-          <PodcastEpisode
-            title={episode.title}
-            key={episode.guid}
-            description={episode.description}
-            url={episode.enclosure.url}
-            type={episode.enclosure.type}
-            image={episode.image}
-          />
-        </div>
+        <PodcastEpisode
+          key={episode.title}
+          title={episode.title}
+          key={episode.guid}
+          description={episode.description}
+          url={episode.enclosure.url}
+          type={episode.enclosure.type}
+          image={episode.image}
+        />
       ))}
     </div>
   );
