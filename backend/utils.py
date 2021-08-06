@@ -55,7 +55,8 @@ def download_webpage(region, webpage_url, file_path, extractor_key):
     file.close()
     # description, thumbnail, title, size
     images = extractor_response["images"]
-    return extractor_response["url"], [img for img in images if "jpg" in img][0], extractor_response["title"], os.path.getsize(file_path)
+    jpg_images = [img for img in images if "jpg" in img]
+    return extractor_response["url"], jpg_images[0] if jpg_images else None, extractor_response["title"], os.path.getsize(file_path)
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):

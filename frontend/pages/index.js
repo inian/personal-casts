@@ -3,6 +3,7 @@ import { Button, Input, Select, Typography } from "@supabase/ui";
 import { toast } from "react-hot-toast";
 import LogInForm from "../components/LogInForm/LogInForm";
 import { addCastEntry } from "../utils/supabaseClient";
+import Podcast from "../components/Podcast/Podcast";
 
 const Home = ({
   user,
@@ -11,8 +12,10 @@ const Home = ({
 }) => {
   const [url, setUrl] = useState("");
   const [type, setType] = useState("video");
+  const isBrowser = typeof window !== "undefined";
 
   const podcastURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/podcast-xml/${user?.id}.xml`;
+  console.log(isBrowser, podcastURL);
 
   useEffect(() => {}, []);
 
@@ -27,7 +30,7 @@ const Home = ({
 
   return (
     <>
-      <div className="relative overflow-hidden h-screen">
+      <div className="relative">
         <div className="max-w-screen-xl h-full mx-auto flex-grow flex flex-col">
           <main className="flex flex-col h-full items-center justify-center w-full flex-1 px-20 text-center text-white">
             {!user ? (
@@ -54,6 +57,7 @@ const Home = ({
                     copy
                   />
                 </div>
+                <Podcast url={podcastURL} />
                 <br />
                 <div className="w-[400px] space-y-4">
                   <Typography.Title level={3} className="text-left">
