@@ -12,6 +12,8 @@ const Home = ({
   const [url, setUrl] = useState("");
   const [type, setType] = useState("video");
 
+  const podcastURL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/podcast-xml/${user.id}.xml`;
+
   useEffect(() => {}, []);
 
   const onSubmit = () => {
@@ -45,6 +47,14 @@ const Home = ({
                     Log out
                   </Button>
                 </div>
+                <div className="w-[400px] space-y-4">
+                  <Input
+                    label="Your customised podcast url"
+                    value={podcastURL}
+                    copy
+                  />
+                </div>
+                <br />
                 <div className="w-[400px] space-y-4">
                   <Typography.Title level={3} className="text-left">
                     Add entry to personal casts
