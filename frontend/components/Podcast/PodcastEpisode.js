@@ -2,13 +2,30 @@ import { Typography } from "@supabase/ui";
 import { Card } from "@supabase/ui";
 
 const PodcastEpisode = ({ title, description, url, type }) => {
-  let cover;
-  if (type == "video/mp4") cover = <video src={url} controls />;
-  else cover = <audio src={url} controls />;
+  let cover, episodeDescription;
+  if (type == "video/mp4") {
+    cover = (
+      <div className="flex justify-center">
+        <video src={url} controls />
+      </div>
+    );
+    episodeDescription = description;
+  } else {
+    cover = (
+      <div className="flex justify-center">
+        <audio src={url} controls />
+      </div>
+    );
+    episodeDescription = (
+      <a target="_blank" href={description}>
+        {description}
+      </a>
+    );
+  }
   return (
     <>
       <Card title={title} cover={cover}>
-        <Typography.Text>{description}</Typography.Text>
+        <Typography.Text>{episodeDescription}</Typography.Text>
       </Card>
     </>
   );
