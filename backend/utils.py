@@ -84,14 +84,19 @@ def get_file_from_storage(storage_endpoint, bucket_name, file_name):
     return response.status_code, response.text
 
 
-def upload_to_storage(file_path, storage_endpoint, bucket_name, service_key, content_type, file_contents=None):
+def upload_to_storage(file_path, storage_endpoint, bucket_name, service_key, content_type, file_contents=None, prefix=None):
     print("uploding to storage ", file_path, file_contents)
     if file_contents:
         with open(file_path, "w") as file:
             file.write(file_contents)
 
     file_name = file_path.split("/")[-1]
-    url = f"{storage_endpoint}/object/{bucket_name}/{file_name}"
+    if prefix:
+        storage_path = f"{bucket_name}/{prefix}/{file_name}"
+    else:
+        storage_path = f"{bucket_name}/{file_name}"
+
+    url = f"{storage_endpoint}/object/{storage_path}"
     response = requests.post(url, files={
         '': ('', open(file_path, 'rb'), content_type)
     }, headers={
@@ -101,4 +106,4 @@ def upload_to_storage(file_path, storage_endpoint, bucket_name, service_key, con
 
     print(response)
     print(response.text)
-    return f"{storage_endpoint}/object/public/{bucket_name}/{file_name}"
+    return f"{storage_endpoint}/object/public/{storage_path}"

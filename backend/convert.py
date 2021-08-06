@@ -29,7 +29,7 @@ def run(user_id, video_url, storage_endpoint, media_bucket, service_key, type, r
         description, thumbnail, title, size = download_webpage(
             region=region, webpage_url=video_url, file_path=f'{folder}/{file_id}', extractor_key=extractor_key)
     link = upload_to_storage(file_path=f"{folder}/{file_id}", storage_endpoint=storage_endpoint,
-                             bucket_name=media_bucket, service_key=service_key, content_type=content_type)
+                             bucket_name=media_bucket, service_key=service_key, content_type=content_type, prefix=user_id)
     podcast = Podcast(user_id, storage_endpoint, service_key)
     fi = FeedItem(file_id, title=title, link=link,
                   mimeType=content_type, length=str(size), description=description, thumbnail=thumbnail)
