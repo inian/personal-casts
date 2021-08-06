@@ -35,6 +35,7 @@ class Feed(object):
             fe.podcast.itunes_image(item.thumbnail)
             fe.id(item.id)
             fe.title(item.title)
+            fe.published(item.published)
             fe.author(item.author)
             fe.description(item.description)
             fe.enclosure(item.link, item.length, item.type)

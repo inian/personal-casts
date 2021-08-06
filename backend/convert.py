@@ -1,6 +1,7 @@
 import json
 import os
 from feed import Feed
+from datetime import datetime, timezone
 from feeditem import FeedItem
 
 from utils import get_secrets
@@ -32,7 +33,7 @@ def run(user_id, video_url, storage_endpoint, media_bucket, service_key, type, r
                              bucket_name=media_bucket, service_key=service_key, content_type=content_type, prefix=user_id)
     podcast = Podcast(user_id, storage_endpoint, service_key)
     fi = FeedItem(file_id, title=title, link=link,
-                  mimeType=content_type, length=str(size), description=description, thumbnail=thumbnail)
+                  mimeType=content_type, length=str(size), description=description, thumbnail=thumbnail, published=datetime.now().replace(tzinfo=timezone.utc))
     podcast.add_podcast_item(fi)
 
 
