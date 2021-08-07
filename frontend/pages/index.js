@@ -29,7 +29,7 @@ const Home = ({
   const onSubmit = () => {
     try {
       addCastEntry(url, type, user.id);
-      toast.success("Yay entry added");
+      toast.success("Item has been queued for processing");
     } catch (err) {
       toast.error(`Oops: ${err.message}`);
     }

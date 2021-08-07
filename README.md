@@ -16,4 +16,3 @@ The `convert` lambda function downloads the youtube video and uploads the result
 
 - Amazon Polly only transcodes the first 3000 characters of the article. We will need to change the synthesizespeechtask api call for larger encodes. This will be slightly more complex since we will need to trigger another lambda function to update the podcast feed after the task is done.
 - The podcast URL assumes your user id is private which may not be the case. We should have a separate table mapping the user id and the podcast URL
-- There is currently no dashboard to login, add podcast URLs - you need to add new rows to the `queue-convert` project to trigger the workflow. At this point, I am focussed on making the backend better :p
