@@ -6,15 +6,19 @@ const Podcast = ({ url }) => {
   const [podcastXML, setPodcastXML] = useState("");
 
   useEffect(async () => {
-    const response = await fetch(url);
-    const podcastXML = await response.text();
-    parsePodcast(podcastXML, (err, data) => {
+    try {
+      const response = await fetch(url);
+      const podcastXML = await response.text();
+      parsePodcast(podcastXML, (err, data) => {
+        console.log(err);
+        setPodcastXML(data);
+      });
+    } catch (err) {
       console.log(err);
-      setPodcastXML(data);
-    });
+    }
   }, []);
 
-  if (!podcastXML) return "Loading..";
+  if (!podcastXML) return "No items in your podcast";
   console.log(podcastXML);
   return (
     <div className="flex flex-col space-y-4">
